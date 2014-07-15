@@ -3,8 +3,8 @@ package com.datastax.sparkcsv
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext._
 import scala.sys.process._
-import com.datastax.spark.connector._
-
+import com.datastax.driver.spark._
+import java.io.File
 
 /**
  * Created by russellspitzer on 6/13/14.
@@ -27,6 +27,7 @@ object ExampleLoad {
 
 
   def main(args: Array[String]) {
+
     val ipReg = """\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}""".r
 
     val parser = new scopt.OptionParser[Config]("sparkcsvexample") {
@@ -64,8 +65,8 @@ object ExampleLoad {
       }
     }
     parser.parse(args, Config()) map { config =>
-      println(config.master)
-      println(config.cassandraIp)
+      println("SparkMaster: ",config.master)
+      println("Cassandra IP: ",config.cassandraIp)
       val modConf = config.copy(cassandraIp = ipReg findFirstIn (config.master) match {
         case Some(ipReg) => ipReg
         case None => "127.0.0.1"
@@ -88,7 +89,7 @@ object ExampleLoad {
       .setMaster(config.master)
       .setAppName("SparkExample: Load CSV")
       .setSparkHome(System.getenv("SPARK_HOME"))
-      .setJars(Array(System.getProperty("user.dir") + "/target/scala-2.10/spark-csv_2.10-1.0.jar"))
+      .setJars(Array(System.getProperty("user.dir") + "/target/scala-2.10/spark-csv-assembly-1.0.jar"))
       .set("spark.cores.max", config.maxCores.toString)
       .set("spark.executor.memory", config.executorMemory.toString)
       .set("cassandra.connection.host", config.cassandraIp)
@@ -140,10 +141,10 @@ object ExampleLoad {
         val missingRowCount = missingRows.count
         println(s"Found $missingRowCount Missing Rows")
         missingRows.foreach( row => println(row._1.toString()))
-
-        //TODO add line by line verify (map job?) (union?)
       }
     }
+
+  println("Finished")
 
   }
 }
