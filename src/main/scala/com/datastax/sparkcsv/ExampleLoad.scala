@@ -3,7 +3,8 @@ package com.datastax.sparkcsv
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext._
 import scala.sys.process._
-import com.datastax.driver.spark._
+//import com.datastax.driver.spark._
+import com.datastax.spark.connector._
 import java.io.File
 
 /**
