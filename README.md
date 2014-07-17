@@ -1,7 +1,7 @@
 Spark CSV Loader for Cassandra
 ==============================
-
 An Example Tool for Using Spark to load a CSV file into Cassandra using spark
+Pull Requests and Issues Welcome!
 
 
     Spark CSV Loader 1.0
@@ -31,6 +31,11 @@ An Example Tool for Using Spark to load a CSV file into Cassandra using spark
 
 This tool is designed to work with both standalone Apache Spark and Cassandra Clusters as well as DataStax
 Cassandra/Spark Clusters.
+
+Requirements
+-------------
+(DSE > 4.5.2 or Apache C* > 2.0.5 ) and Spark > 0.9.1
+
 
 Building the project
 ---------------------

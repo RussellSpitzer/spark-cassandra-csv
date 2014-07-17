@@ -15,11 +15,8 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 libraryDependencies += "org.apache.spark" %% "spark-core" % "0.9.1" % "provided"
 
 //Just using this to pull in all the other spark-driver dependencies
-libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0-beta1"
+libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0-beta2"
 //Cassandra Spark Driver is located in Lib Dir, Compiled before maven art.
-
-//Creates jar to be distributed for the spark application
-exportJars := true
 
 resolvers += Resolver.sonatypeRepo("public")
 

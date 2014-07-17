@@ -3,14 +3,7 @@ package com.datastax.sparkcsv
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext._
 import scala.sys.process._
-//import com.datastax.driver.spark._
 import com.datastax.spark.connector._
-import java.io.File
-
-/**
- * Created by russellspitzer on 6/13/14.
- */
-
 
 case class Config(master: String = "",
                   filename: String = "exampleCsv",
@@ -50,7 +43,7 @@ object ExampleLoad {
         "A file containing the names of the Cassandra columns that the csv columns should map to, comma-delimited"
       }
       arg[String]("master") optional() action { (arg, config) => config.copy(master = arg)} text {
-        "Spark Address of Master Node, Default runs `dsetool sparkmaster` to find master"
+        "Spark Address of Master Node, Default runs `dsetool sparkmaster` to find master uses localhost if dsetool is not avaliable"
       }
       arg[String]("cassandraIp") optional() action { (arg, config) => config.copy(cassandraIp = arg)} text{
         "Ip Address of Cassandra Server, Default uses Spark Master IP address"
