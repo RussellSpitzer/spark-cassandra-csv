@@ -41,6 +41,26 @@ To build go to the home directory of the project and run
 This will produce a fat-jar in `target/scala-2.10/spark-csv-assembly-1.0.jar`. Which needs to be included in any running 
 Spark job. It contains the references to the anonymous functions which Spark will use when running.
 
+Creating the Example Keyspace and Table
+--------------------------------
+This application assumes that the keyspace and table to be inserted to already exist. To create 
+the table used in the example used below run the following commands in cqlsh.
+   
+    CREATE KEYSPACE ks WITH replication = {
+      'class': 'SimpleStrategy',
+      'replication_factor': '1'
+    };
+    
+    USE ks;
+    
+    CREATE TABLE tab (
+      key int,
+      data1 int,
+      data2 int,
+      data3 int,
+      PRIMARY KEY ((key))
+    )
+
 
 Running with Datastax Enterprise
 --------------------------------
