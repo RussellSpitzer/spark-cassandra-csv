@@ -12,7 +12,7 @@ import java.io.File
  */
 
 
-case class Config(master: String = "dsetool sparkmaster".!!.trim, // Calls a subprocess to get the spark master
+case class Config(master: String = "",
                   filename: String = "exampleCsv",
                   keyspace: String = "ks",
                   table: String = "tab",
@@ -20,7 +20,7 @@ case class Config(master: String = "dsetool sparkmaster".!!.trim, // Calls a sub
                   maxCores: Int = 1,
                   executorMemory: String = "2g",
                   verify: Boolean = false,
-                  cassandraIp: String = "127.0.0.1"
+                  cassandraIp: String = ""
                    )
 
 
@@ -28,6 +28,10 @@ object ExampleLoad {
 
 
   def main(args: Array[String]) {
+    if (System.getenv("SPARK_HOME") == null){
+      println("SPARK_HOME is not set\nExiting")
+      sys.exit(1)
+    }
 
     val ipReg = """\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}""".r
 
@@ -65,15 +69,17 @@ object ExampleLoad {
         "CLI Help"
       }
     }
-    parser.parse(args, Config()) map { config =>
-      println("SparkMaster: ",config.master)
-      println("Cassandra IP: ",config.cassandraIp)
-      val modConf = config.copy(cassandraIp = ipReg findFirstIn (config.master) match {
-        case Some(ipReg) => ipReg
-        case None => "127.0.0.1"
-      }
-      )
-      loadCSV(modConf)
+
+    val master = try {"dsetool sparkmaster".!!.trim } catch { case x:Exception => "localhost"}
+    val cassandraIp =  ipReg findFirstIn (master) match {
+      case Some(ipReg) => ipReg
+      case None => "127.0.0.1"
+    }
+    // Calls a subprocess to get the spark master
+    parser.parse(args, Config(master = master, cassandraIp = cassandraIp)) map { config =>
+      println("SparkMaster: " + config.master)
+      println("CassandraIP: " + config.cassandraIp)
+      loadCSV(config)
     } getOrElse {
       System.exit(1)
     }
@@ -92,8 +98,8 @@ object ExampleLoad {
       .setSparkHome(System.getenv("SPARK_HOME"))
       .setJars(Array(System.getProperty("user.dir") + "/target/scala-2.10/spark-csv-assembly-1.0.jar"))
       .set("spark.cores.max", config.maxCores.toString)
-      .set("spark.executor.memory", config.executorMemory.toString)
-      .set("cassandra.connection.host", config.cassandraIp)
+      .set("spark.executor.memory", config.executorMemory)
+      .set("spark.cassandra.connection.host", config.cassandraIp)
 
     //Make a spark context
     val sc = new SparkContext(sparkconf)
