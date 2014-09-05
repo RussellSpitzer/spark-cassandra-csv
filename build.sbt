@@ -14,7 +14,7 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "0.9.1" % "provided"
 
-libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0-beta2"
+libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0-rc6"
 
 resolvers += Resolver.sonatypeRepo("public")
 
